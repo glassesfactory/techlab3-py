@@ -66,8 +66,8 @@ def update(id):
     with db:
         tweet = Tweet.objects(sid=id).first()
         tweet.text = data['text']
+        tweet.updated_at = datetime.now()
         try:
-            tweet.updated_at = datetime.now()
             tweet.save()
         except Exception, e:
             print e
@@ -80,13 +80,11 @@ def update(id):
 def destroy(id):
     with db:
         try:
-            print "oppai"
-            # tweet = Tweet.objects(sid=id).first().delete()
-            # datas = json.dumps({'sid': tweet.sid})
-            datas = json.dumps({'sid': 1})
+            Tweet.objects(sid=id).first().delete()
+            datas = json.dumps({'sid': id})
         except:
             # raise
-            pass
+            raise
     return Response(datas, mimetype="application/json", status=200)
 
 

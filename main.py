@@ -80,8 +80,10 @@ def update(id):
 def destroy(id):
     with db:
         try:
-            tweet = Tweet.objects(sid=id).first().delete()
-            datas = json.dumps({'id': tweet.sid})
+            print "oppai"
+            # tweet = Tweet.objects(sid=id).first().delete()
+            # datas = json.dumps({'sid': tweet.sid})
+            datas = json.dumps({'sid': 1})
         except:
             # raise
             pass

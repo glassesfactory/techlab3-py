@@ -2,12 +2,15 @@
 class Index
   tweets:[]
   $el:null
+  state:true
   constructor:()->
     tweets = []
     @.$el = $('#main')
     @.$el.on 'click', '.article', @articleSelectedHandler
-    @.$el.css {left:window.innerWidth / 2 - 350}
+    @resize()
     $(window).on 'post_success', @newTweetAppend
+    $(window).on 'resize', @resize
+      
 
   fetchTweetCollection:()=>
     @.$el.empty()
@@ -60,7 +63,18 @@ class Index
 
   slide:()=>
     # console.log @$el
-    @$el.animate {left: window.innerWidth / 2 - 550}
+    @$el.animate {left: @.pos - 420}
+    @.state = false
 
   hide:()=>
-    @$el.animate {left:window.innerWidth / 2 - 350 }
+    @$el.animate {left: @.pos - 250 }
+    @.state = true
+
+  resize:()=>
+    container = $('#container')
+    @.pos = container.offset().left + container.width() / 2
+    if @.state
+      @.$el.css {left: @.pos - 250}
+    else
+      @$el.css {left: @.pos - 420}
+

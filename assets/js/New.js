@@ -57,7 +57,8 @@ New = (function() {
       method: "POST",
       data: data,
       success: function(data) {
-        return $(window).trigger('post_success', data);
+        $(window).trigger('post_success', data);
+        return Alert.dispAlert('作成しました', 'alert-success');
       }
     });
     return this._removeContainer();

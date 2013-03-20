@@ -7,9 +7,14 @@ Index = (function() {
 
   Index.prototype.$el = null;
 
+  Index.prototype.state = true;
+
   function Index() {
     var tweets,
       _this = this;
+    this.resize = function() {
+      return Index.prototype.resize.apply(_this, arguments);
+    };
     this.hide = function() {
       return Index.prototype.hide.apply(_this, arguments);
     };
@@ -34,10 +39,9 @@ Index = (function() {
     tweets = [];
     this.$el = $('#main');
     this.$el.on('click', '.article', this.articleSelectedHandler);
-    this.$el.css({
-      left: window.innerWidth / 2 - 350
-    });
+    this.resize();
     $(window).on('post_success', this.newTweetAppend);
+    $(window).on('resize', this.resize);
   }
 
   Index.prototype.fetchTweetCollection = function() {
@@ -105,15 +109,32 @@ Index = (function() {
   };
 
   Index.prototype.slide = function() {
-    return this.$el.animate({
-      left: window.innerWidth / 2 - 550
+    this.$el.animate({
+      left: this.pos - 420
     });
+    return this.state = false;
   };
 
   Index.prototype.hide = function() {
-    return this.$el.animate({
-      left: window.innerWidth / 2 - 350
+    this.$el.animate({
+      left: this.pos - 250
     });
+    return this.state = true;
+  };
+
+  Index.prototype.resize = function() {
+    var container;
+    container = $('#container');
+    this.pos = container.offset().left + container.width() / 2;
+    if (this.state) {
+      return this.$el.css({
+        left: this.pos - 250
+      });
+    } else {
+      return this.$el.css({
+        left: this.pos - 420
+      });
+    }
   };
 
   return Index;

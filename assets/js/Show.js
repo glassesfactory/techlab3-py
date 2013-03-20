@@ -9,9 +9,14 @@ Show = (function() {
 
   Show.prototype.isEdit = false;
 
+  Show.prototype.state = false;
+
   function Show() {
     var $el,
       _this = this;
+    this.resize = function(event) {
+      return Show.prototype.resize.apply(_this, arguments);
+    };
     this.deleteTweet = function(id) {
       return Show.prototype.deleteTweet.apply(_this, arguments);
     };
@@ -46,19 +51,19 @@ Show = (function() {
     }
     this.$el = $el;
     this.$el.addClass('detail');
-    this.$el.css({
-      left: window.innerWidth / 2 - 205
-    });
+    this.resize();
     this.$el.on('click', '.delete', this.deleteClickHandler);
     this.$el.on('click', '.edit', this.editClickHandler);
+    $(window).on('resize', this.resize);
   }
 
   Show.prototype.show = function(id) {
     var url;
     this.$el.animate({
-      left: window.innerWidth / 2 + 80
+      left: this.pos + 80
     });
     url = '/' + id;
+    this.state = true;
     $.ajax({
       url: url,
       dataType: "json",
@@ -71,16 +76,17 @@ Show = (function() {
   Show.prototype.hide = function() {
     var _this = this;
     this.$el.animate({
-      left: window.innerWidth / 2 - 205
+      left: this.pos - 205
     }, function() {
-      return _this.$el.empty();
+      _this.$el.empty();
+      return _this.state = false;
     });
   };
 
   Show.prototype.hideAndShow = function(id) {
     var _this = this;
     return this.$el.animate({
-      left: window.innerWidth / 2 - 225
+      left: this.pos - 225
     }, function() {
       _this.$el.empty();
       return _this.show(id);
@@ -134,10 +140,12 @@ Show = (function() {
         $tweet.show();
         form.remove();
         $listView = $('#tweetlist' + event.sid);
-        return $listView.find('.tweetBody').empty().append(event.text);
+        $listView.find('.tweetBody').empty().append(event.text);
+        return Alert.dispAlert('更新しました', 'alert-success');
       },
       error: function(event) {
-        return console.log(event);
+        console.log(event);
+        return Alert.dispAlert(event, 'alert-error');
       }
     });
   };
@@ -153,7 +161,7 @@ Show = (function() {
     var id;
     event.preventDefault();
     id = $(event.currentTarget).data('delete');
-    return Alert.dispAlert('消してもいいの', this, deleteTweet, id);
+    return Alert.dispModalAlert('消してもいいの', this, this.deleteTweet, [id]);
   };
 
   Show.prototype.deleteTweet = function(id) {
@@ -163,13 +171,32 @@ Show = (function() {
     return $.ajax({
       url: url,
       method: "DELETE",
+      dataType: 'json',
       success: function(data) {
-        return console.log(data);
+        var $listView;
+        $listView = $('#tweetlist' + data.sid);
+        $listView.remove();
+        window.App.change('/');
+        return Alert.dispAlert('削除しました', 'alert-success');
       },
       error: function(error) {
-        return console.log(error);
+        console.log(error);
+        return Alert.dispAlert(error, 'alert-error');
       }
     });
+  };
+
+  Show.prototype.resize = function(event) {
+    this.pos = window.innerWidth / 2;
+    if (this.state) {
+      return this.$el.css({
+        left: this.pos + 80
+      });
+    } else {
+      return this.$el.css({
+        left: this.pos - 205
+      });
+    }
   };
 
   return Show;

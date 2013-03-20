@@ -2,6 +2,7 @@ class Show
   $el:null
   current:null
   isEdit:false
+  state:false
   constructor:()->
     $el = $('#show')
     if not $el or $el.length < 1
@@ -9,14 +10,19 @@ class Show
       $el = $('#show')
     @$el = $el
     @$el.addClass('detail')
-    @$el.css {left:window.innerWidth / 2 - 205}
+
+    @resize()
+    
     @$el.on 'click', '.delete', @deleteClickHandler
     @$el.on 'click', '.edit', @editClickHandler
+
+    $(window).on 'resize', @resize
     
 
   show:(id)->
-    @$el.animate {left: window.innerWidth / 2 + 80}
+    @$el.animate {left: @.pos + 80}
     url = '/' + id
+    @.state = true
     $.ajax({
       url:url
       dataType:"json"
@@ -28,12 +34,13 @@ class Show
     return
 
   hide:()->
-    @$el.animate { left: window.innerWidth / 2 - 205}, ()=>
+    @$el.animate { left: @.pos - 205}, ()=>
       @$el.empty()
+      @.state = false
     return
 
   hideAndShow:(id)=>
-    @$el.animate { left:window.innerWidth / 2 - 225 }, ()=>
+    @$el.animate { left: @.pos - 225 }, ()=>
       @$el.empty()
       @show(id)
 
@@ -79,9 +86,11 @@ class Show
         #一覧も変更
         $listView = $('#tweetlist' + event.sid)
         $listView.find('.tweetBody').empty().append(event.text)
+        Alert.dispAlert '更新しました', 'alert-success'
 
       error:(event)=>
         console.log event
+        Alert.dispAlert event, 'alert-error'
       })
 
   editCancelHandler:(event)=>
@@ -90,20 +99,30 @@ class Show
     $tweet.show()
 
 
-
   deleteClickHandler:(event)=>
     event.preventDefault()
     id = $(event.currentTarget).data('delete')
-    Alert.dispAlert('消してもいいの', @, deleteTweet, id )
+    Alert.dispModalAlert('消してもいいの', @, @deleteTweet, [id])
 
   deleteTweet:(id)=>
     url = '/' + id
     $.ajax({
       url:url
       method:"DELETE"
+      dataType:'json'
       success: (data)=>
-        console.log data
+        $listView = $('#tweetlist' + data.sid)
+        $listView.remove()
+        window.App.change('/')
+        Alert.dispAlert('削除しました', 'alert-success')
       error:(error)=>
         console.log error
+        Alert.dispAlert error, 'alert-error'
     })
 
+  resize:(event)=>
+    @.pos = window.innerWidth / 2
+    if @.state
+      @$el.css {left: @.pos + 80}
+    else
+      @$el.css {left: @.pos - 205}

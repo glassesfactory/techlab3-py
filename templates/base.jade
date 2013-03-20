@@ -10,14 +10,15 @@ html
       style(type="text/css")
         body{padding-top:60px;}
   body
-    div.navbar.navbar-inverse.navbar-fixed-top
-      div.navbar-inner
-        div.container-fluid
-          a(href="/").brand tech lab 3
-          div.pull-right: ul.nav: li: a(href="/new").new NEW
-    #container.container
-      block main
-    footer &copy; Copyright hageee.net All rights reserved.
-    
+    #global
+      div.navbar.navbar-inverse.navbar-fixed-top
+        div.navbar-inner
+          div.container-fluid
+            a(href="/").brand tech lab 3
+            div.pull-right: ul.nav: li: a(href="/new").new NEW
+      #container.container
+        block main
+      footer &copy; Copyright hageee.net All rights reserved.
+      
     block script
       script(type="text/javascript", src="/assets/js/components/requirejs/require.js", data-main="/assets/js/main")

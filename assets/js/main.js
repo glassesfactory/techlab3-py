@@ -24,7 +24,7 @@ newController = null;
 
 contents = null;
 
-require(['jquery', 'lodash', 'kazitori', 'Index', 'New', 'IndexListView', 'TweetModel', 'Show', 'ShowView', 'EditView'], function() {
+require(['jquery', 'lodash', 'kazitori', 'Index', 'New', 'IndexListView', 'TweetModel', 'Show', 'ShowView', 'EditView', 'Alert'], function() {
   var Router;
   Router = (function(_super) {
 

@@ -32,6 +32,7 @@ class New
       data:data
       success:(data)=>
         $(window).trigger('post_success', data)
+        Alert.dispAlert '作成しました', 'alert-success'
     }
     @_removeContainer()
 

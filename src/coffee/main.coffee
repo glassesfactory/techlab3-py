@@ -16,7 +16,7 @@ require.config {
 index = null
 newController = null
 contents = null
-require ['jquery', 'lodash', 'kazitori', 'Index', 'New', 'IndexListView', 'TweetModel', 'Show', 'ShowView', 'EditView', 'Alert'], ()->
+require ['jquery', 'lodash', 'kazitori'], ()->
   class Router extends Kazitori
     routes:
       '/':'index'

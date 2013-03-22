@@ -79,7 +79,6 @@ class Show
       data:data
       success:(event)=>
         $tweet = @$el.find('.tweet')
-        console.log event
         $tweet.empty().append(event.text)
         $tweet.show()
         form.remove()
@@ -102,7 +101,7 @@ class Show
   deleteClickHandler:(event)=>
     event.preventDefault()
     id = $(event.currentTarget).data('delete')
-    Alert.dispModalAlert('消してもいいの', @, @deleteTweet, [id])
+    Alert.dispModalAlert '消してもいいの', @, @deleteTweet, [id]
 
   deleteTweet:(id)=>
     url = '/' + id

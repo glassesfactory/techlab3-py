@@ -15,7 +15,6 @@ class New
       @.$container = $('#newContainer')
       @.$container.append(@$el)
       @.$container.css {left: window.innerWidth / 2 - 215}
-      # $container.addClass('alert')
       $('form').on 'submit', @_sendTweetHandler
       $('textarea[name=text]').focus()
       $('.close').on 'click', @closeHandler

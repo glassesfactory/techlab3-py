@@ -135,7 +135,6 @@ Show = (function() {
       success: function(event) {
         var $listView, $tweet;
         $tweet = _this.$el.find('.tweet');
-        console.log(event);
         $tweet.empty().append(event.text);
         $tweet.show();
         form.remove();
